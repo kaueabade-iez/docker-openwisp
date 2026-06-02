@@ -11,10 +11,10 @@ SHELL := /bin/bash
 
 default: compose-build
 
-USER = registry.gitlab.com/openwisp/docker-openwisp
 TAG = edge
 # OPENWISP_VERSION: image tag used for pulling/pushing images (e.g. "edge", "latest", "25.10.0")
 # Can be overridden via .env or command line. Not the same as RELEASE_VERSION
+USER ?= registry.gitlab.com/openwisp/docker-openwisp
 OPENWISP_VERSION ?= edge
 IMAGE_OWNER ?= openwisp
 SKIP_PULL ?= false
