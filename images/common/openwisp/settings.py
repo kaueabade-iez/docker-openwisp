@@ -173,8 +173,24 @@ else:
 REDIS_BASE_URL = f"{REDIS_SCHEME}://{credentials}{REDIS_HOST}:{REDIS_PORT}"
 
 REDIS_CACHE_URL = os.environ.get("REDIS_CACHE_URL", f"{REDIS_BASE_URL}/0")
-CHANNEL_REDIS_HOST = os.environ.get("CHANNEL_REDIS_URL", f"{REDIS_BASE_URL}/1")
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", f"{REDIS_BASE_URL}/2")
+CHANNEL_REDIS_URL = os.environ.get("CHANNEL_REDIS_URL")
+if CHANNEL_REDIS_URL:
+    CHANNEL_REDIS_HOST = CHANNEL_REDIS_URL
+else:
+    CHANNEL_REDIS_HOST = {
+        "host": REDIS_HOST,
+        "port": int(REDIS_PORT),
+        "db": 1,
+        "socket_timeout": None,
+    }
+    if REDIS_USER and REDIS_PASS:
+        CHANNEL_REDIS_HOST["username"] = REDIS_USER
+        CHANNEL_REDIS_HOST["password"] = REDIS_PASS
+    elif REDIS_PASS:
+        CHANNEL_REDIS_HOST["password"] = REDIS_PASS
+    if REDIS_SCHEME == "rediss":
+        CHANNEL_REDIS_HOST["ssl"] = True
 
 CELERY_TASK_ACKS_LATE = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
