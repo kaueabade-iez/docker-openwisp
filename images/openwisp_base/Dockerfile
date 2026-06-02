@@ -14,7 +14,7 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
     libpq-dev libjpeg-dev libffi-dev python3-dev \
-    python3-pip libxml2-dev libxslt1-dev zlib1g-dev g++ procps
+    python3-pip libxml2-dev libxslt1-dev zlib1g-dev g++ procps git
 
 RUN useradd --system --password '' --create-home --shell /bin/bash \
     --gid root --uid 1001 openwisp
@@ -82,7 +82,7 @@ ARG DJANGO_SOURCE=django~=5.2.0
 RUN pip install --no-cache-dir --user --upgrade ${DJANGO_SOURCE}
 
 COPY ./openwisp_base/requirements.txt /tmp/openwisp-deploy-requirements.txt
-RUN pip install --no-cache-dir --user --upgrade -r /tmp/openwisp-deploy-requirements.txt && \
+RUN pip install --no-cache-dir --user --upgrade --force-reinstall -r /tmp/openwisp-deploy-requirements.txt && \
     pip install --no-cache-dir --upgrade urllib3~=2.2.1
 
 FROM system
