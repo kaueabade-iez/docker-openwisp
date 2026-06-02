@@ -15,3 +15,6 @@ tldextract>=5.3.1,<5.4.0
 # (eg: Amazon S3, GCS)
 django-storages>=1.14.6,<1.15.0
 boto3>=1.43.28,<1.44.0
+# custom forks
+openwisp-controller @ git+https://github.com/kaueabade-iez/openwisp-controller.git@testing
+netjsonconfig @ git+https://github.com/kaueabade-iez/netjsonconfig.git@testing
