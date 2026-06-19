@@ -32,48 +32,48 @@ ENV PATH="${PATH}:/home/openwisp/.local/bin"
 RUN pip install --no-cache-dir --user --upgrade pip setuptools wheel
 # Temporarily install the OpenWISP modules from their 1.3 development
 # branch until the 1.3 line is released; switch back to ~=1.3.0 then.
-ARG OPENWISP_MONITORING_SOURCE="https://github.com/openwisp/openwisp-monitoring/archive/refs/heads/1.3.tar.gz"
+ARG OPENWISP_MONITORING_SOURCE="git+https://github.com/kaueabade-iez/openwisp-monitoring.git@testing"
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --user --upgrade ${OPENWISP_MONITORING_SOURCE}
-ARG OPENWISP_FIRMWARE_SOURCE="https://github.com/openwisp/openwisp-firmware-upgrader/archive/refs/heads/1.3.tar.gz"
+ARG OPENWISP_FIRMWARE_SOURCE="git+https://github.com/kaueabade-iez/openwisp-firmware-upgrader.git@testing"
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --user --upgrade ${OPENWISP_FIRMWARE_SOURCE}
-ARG OPENWISP_TOPOLOGY_SOURCE="https://github.com/openwisp/openwisp-network-topology/archive/refs/heads/1.3.tar.gz"
+ARG OPENWISP_TOPOLOGY_SOURCE="git+https://github.com/kaueabade-iez/openwisp-network-topology.git@testing"
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --user --upgrade ${OPENWISP_TOPOLOGY_SOURCE}
-ARG OPENWISP_RADIUS_SOURCE="https://github.com/openwisp/openwisp-radius/archive/refs/heads/1.3.tar.gz"
+ARG OPENWISP_RADIUS_SOURCE="git+https://github.com/kaueabade-iez/openwisp-radius.git@testing"
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --user --upgrade ${OPENWISP_RADIUS_SOURCE}
 
 # here we try to install custom versions of the modules only if the
 # supplied argument does not equal the default value, because
 # otherwise these modules will have already been installed above
-ARG OPENWISP_IPAM_SOURCE=default
+ARG OPENWISP_IPAM_SOURCE="git+https://github.com/kaueabade-iez/openwisp-ipam.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$OPENWISP_IPAM_SOURCE" != "default" ] ; then \
         pip install --no-cache-dir --user --upgrade ${OPENWISP_IPAM_SOURCE}; \
     fi
-ARG OPENWISP_CONTROLLER_SOURCE=default
+ARG OPENWISP_CONTROLLER_SOURCE="git+https://github.com/kaueabade-iez/openwisp-controller.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$OPENWISP_CONTROLLER_SOURCE" != "default" ] ; then \
         pip install --no-cache-dir --user --upgrade ${OPENWISP_CONTROLLER_SOURCE}; \
     fi
-ARG OPENWISP_NOTIFICATION_SOURCE=default
+ARG OPENWISP_NOTIFICATION_SOURCE="git+https://github.com/kaueabade-iez/openwisp-notifications.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$OPENWISP_NOTIFICATION_SOURCE" != "default" ] ; then \
         pip install --no-cache-dir --user --upgrade ${OPENWISP_NOTIFICATION_SOURCE}; \
     fi
-ARG OPENWISP_USERS_SOURCE=default
+ARG OPENWISP_USERS_SOURCE="git+https://github.com/kaueabade-iez/openwisp-users.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$OPENWISP_USERS_SOURCE" != "default" ] ; then \
         pip install --no-cache-dir --user --upgrade --force-reinstall ${OPENWISP_USERS_SOURCE}; \
     fi
-ARG OPENWISP_UTILS_SOURCE=default
+ARG OPENWISP_UTILS_SOURCE="git+https://github.com/kaueabade-iez/openwisp-utils.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$OPENWISP_UTILS_SOURCE" != "default" ] ; then \
         pip install --no-cache-dir --user --upgrade --force-reinstall "${OPENWISP_UTILS_SOURCE}"; \
     fi
-ARG DJANGO_X509_SOURCE=default
+ARG DJANGO_X509_SOURCE="git+https://github.com/kaueabade-iez/django-x509.git@testing"
 # hadolint ignore=DL3013
 RUN if [ "$DJANGO_X509_SOURCE" != "default" ]; then \
         pip install --no-cache-dir --user --upgrade --force-reinstall ${DJANGO_X509_SOURCE}; \
@@ -84,7 +84,7 @@ ARG DJANGO_SOURCE=django~=5.2.0
 RUN pip install --no-cache-dir --user --upgrade ${DJANGO_SOURCE}
 
 COPY ./openwisp_base/requirements.txt /tmp/openwisp-deploy-requirements.txt
-RUN pip install --no-cache-dir --user --upgrade --force-reinstall -r /tmp/openwisp-deploy-requirements.txt && \
+RUN pip install --no-cache-dir --user --upgrade -r /tmp/openwisp-deploy-requirements.txt && \
     pip install --no-cache-dir --upgrade urllib3~=2.2.1
 
 FROM system
