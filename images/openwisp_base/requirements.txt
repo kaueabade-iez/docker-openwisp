@@ -17,4 +17,8 @@ django-storages>=1.14.6,<1.15.0
 boto3>=1.43.28,<1.44.0
 # custom forks
 openwisp-controller @ git+https://github.com/kaueabade-iez/openwisp-controller.git@testing
+openwisp-firmware-upgrader @ git+https://github.com/kaueabade-iez/openwisp-firmware-upgrader.git@testing
+openwisp-monitoring @ git+https://github.com/kaueabade-iez/openwisp-monitoring.git@testing
+openwisp-network-topology @ git+https://github.com/kaueabade-iez/openwisp-network-topology.git@testing
+openwisp-radius @ git+https://github.com/kaueabade-iez/openwisp-radius.git@testing
 netjsonconfig @ git+https://github.com/kaueabade-iez/netjsonconfig.git@testing
