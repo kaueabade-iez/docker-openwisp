@@ -1,7 +1,9 @@
 import os
 import subprocess
+import tempfile
 import time
 import unittest
+from pathlib import Path
 from urllib import error as urlerror
 from urllib import request
 
@@ -427,13 +429,15 @@ class TestServices(TestUtilities, unittest.TestCase):
             "openwisp_notifications.tasks.update_org_user_notificationsetting",
             "openwisp_radius.tasks.cleanup_stale_radacct",
             "openwisp_radius.tasks.convert_called_station_id",
-            "openwisp_radius.tasks.deactivate_expired_users",
             "openwisp_radius.tasks.delete_old_postauth",
             "openwisp_radius.tasks.delete_old_radacct",
             "openwisp_radius.tasks.delete_old_radiusbatch_users",
             "openwisp_radius.tasks.delete_unverified_users",
             "openwisp_radius.tasks.perform_change_of_authorization",
             "openwisp_radius.tasks.send_login_email",
+            "openwisp_users.tasks.deactivate_expired_users",
+            "openwisp_users.tasks.expiration_reminder_email",
+            "openwisp_users.tasks.password_expiration_email",
         ]
 
         def _test_celery_task_registered(container_name):
@@ -526,6 +530,55 @@ class TestServices(TestUtilities, unittest.TestCase):
             self.fail(
                 f"One of the containers are down!\nOutput:\n{output}\nError:\n{error}"
             )
+
+
+class TestUtils(TestUtilities, unittest.TestCase):
+    """Other tests"""
+
+    def test_update_version_updates_only_version_file(self):
+        repository_root = Path(__file__).resolve().parents[1]
+        makefile_content = (
+            "RELEASE_VERSION = $(shell cat images/common/openwisp/VERSION)\n"
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir = Path(tmpdir)
+            version_file = tmpdir / "images" / "common" / "openwisp" / "VERSION"
+            version_file.parent.mkdir(parents=True)
+            version_file.write_text("25.10.3\n")
+            makefile = tmpdir / "Makefile"
+            makefile.write_text((repository_root / "Makefile").read_text())
+            (tmpdir / ".env").write_text("")
+            (tmpdir / "build.py").write_text((repository_root / "build.py").read_text())
+            result = subprocess.run(
+                ["make", "bump", "VERSION=26.01.0"],
+                cwd=tmpdir,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            missing_argument = subprocess.run(
+                ["make", "bump"],
+                cwd=tmpdir,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            old_target = subprocess.run(
+                [
+                    "make",
+                    "bump-version",
+                ],
+                cwd=tmpdir,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertNotEqual(missing_argument.returncode, 0)
+            self.assertNotEqual(old_target.returncode, 0)
+            self.assertEqual(version_file.read_text(), "26.01.0\n")
+            self.assertIn(makefile_content, makefile.read_text())
+            self.assertFalse((version_file.parent / "_version.py").exists())
 
 
 if __name__ == "__main__":

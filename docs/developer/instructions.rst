@@ -91,8 +91,9 @@ Run Quality Assurance Checks
 ----------------------------
 
 We use `shfmt <https://github.com/mvdan/sh#shfmt>`__ to format shell
-scripts and `hadolint <https://github.com/hadolint/hadolint#install>`__ to
-lint Dockerfiles.
+scripts, `hadolint <https://github.com/hadolint/hadolint#install>`__ to
+lint Dockerfiles, and `prettier <https://prettier.io>`__ to check
+formatting of YAML, JSON, CSS, JavaScript, and Markdown files.
 
 To format all files, run:
 
@@ -141,3 +142,6 @@ Other options:
   debugging and analyzing failing container logs.
 - ``make develop-pythontests``: Similar to ``develop-runtests``, but it
   requires containers to be already running.
+- ``make bump VERSION=x.y.z``: Bump the release version in
+  ``images/common/openwisp/VERSION``. The ``Makefile`` reads
+  ``RELEASE_VERSION`` from this file.
