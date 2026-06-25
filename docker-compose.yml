@@ -82,6 +82,7 @@ services:
     environment:
       - MODULE_NAME=celery
     volumes:
+      - openwisp_static:/opt/openwisp/static:ro
       - openwisp_media:/opt/openwisp/media
       - openwisp_private_storage:/opt/openwisp/private
       - openwisp_ssh:/home/openwisp/.ssh
@@ -97,6 +98,7 @@ services:
     environment:
       - MODULE_NAME=celery_monitoring
     volumes:
+      - openwisp_static:/opt/openwisp/static:ro
       - openwisp_media:/opt/openwisp/media
       - openwisp_private_storage:/opt/openwisp/private
       - ./customization/configuration/django/:/opt/openwisp/openwisp/configuration:ro
@@ -113,6 +115,7 @@ services:
     env_file:
       - .env
     volumes:
+      - openwisp_static:/opt/openwisp/static:ro
       - ./customization/configuration/django/:/opt/openwisp/openwisp/configuration:ro
     depends_on:
       - postgres
